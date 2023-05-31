@@ -28,9 +28,24 @@ productRouter.post (`/`, async (req,res)=>{
     const {name,description,price, thubnail,code,stock , category} = req.body
     if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("Todos los campos son obligatorios")
     else {
-       await  productManager.addProduct(name,description,price,thubnail,code,stock,category)
-        res.status(200).send (`Producto ${{name,description,price,thubnail,code,stock,category}} fue agregado con exito`)
+       await productManager.addProduct(name,description,price,thubnail,code,stock,category)
+       res.status(200).send (`Producto ${{name,description,price,thubnail,code,stock,category}} fue agregado con exito`)
     }
 })
+
+productRouter.put(`/:pid` , async (req,res)=>{
+    let id = req.params.pid
+    let update = req.body
+    let producttoUpdate = await productManager.getPruductsByid(id)
+    if (producttoUpdate){
+        producttoUpdate = { ...producttoUpdate, ...update}
+        await productManager.updateProduct(id , producttoUpdate)
+        res.status(200).send("Producto actualizado con exito")
+    }
+    if (!producttoUpdate) res.status(404).send ("El producto no existe")
+})
+
+
+
 
 export default productRouter ;

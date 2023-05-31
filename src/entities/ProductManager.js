@@ -11,8 +11,6 @@ import fs from 'fs'
         this.#arrayProducts=[]
     }
 
-    
-
     addProduct =async (name,description,price, thubnail,code,stock , category)=>{
         this.#arrayProducts = await this.#retrieveData()
         this.#arrayProducts.push({id:this.#generateId(),name,description,price,thubnail,code,stock,status:true , category}) 
@@ -28,23 +26,24 @@ import fs from 'fs'
         let productSearch = null
         this.#arrayProducts = await this.#retrieveData()
         this.#arrayProducts.forEach(product=>{
-            if (product.id == id) productSearch = product
-            console.log (productSearch)
-        })
+        if (product.id == id) productSearch = product })
         return  productSearch
     }
 
     updateProduct = async (id , newProduct )=>{
         this.#arrayProducts = await this.#retrieveData()
+        
         this.#arrayProducts.forEach(product=>{
-            if (product.id === id) {
-                let {name,description,price, thubnail,code,stock} = newProduct
+            if (product.id == id) {
+                let {name,description,price, thubnail,code,stock , category} = newProduct
                 product.name = name
                 product.description=description
                 product.price = price
                 product.thubnail = thubnail
                 product.code = code 
                 product.stock = stock
+                product.category = category
+                console.log(newProduct.price)
             }
         })
        await this.#saveData()
@@ -76,7 +75,7 @@ import fs from 'fs'
     }
 }
 
-const productManager = new ProductManager (`./src/data/products.json` , `utf-8`)
+
 
 
 
