@@ -1,0 +1,24 @@
+[
+	{
+		"id": 1,
+		"name": "Disola M 4015",
+		"description": "Tambor 205 lts",
+		"price": 150000,
+		"thubnail": "www",
+		"code": "1301",
+		"stock": 20,
+		"status": true,
+		"category": "Motor Principal"
+	},
+	{
+		"id": 2,
+		"name": "Hidraulico Bp 68",
+		"description": "Tambor 205 lts",
+		"price": 150000,
+		"thubnail": "www",
+		"code": "1304",
+		"stock": 20,
+		"status": true,
+		"category": "Motor Principal"
+	}
+]
