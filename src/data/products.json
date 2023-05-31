@@ -9,16 +9,5 @@
 		"stock": 20,
 		"status": true,
 		"category": "Motor Principal"
-	},
-	{
-		"id": 2,
-		"name": "Hidraulico Bp 68",
-		"description": "Tambor 205 lts",
-		"price": 175000,
-		"thubnail": "www",
-		"code": "1304",
-		"stock": 20,
-		"status": true,
-		"category": "Motor Principal"
 	}
 ]

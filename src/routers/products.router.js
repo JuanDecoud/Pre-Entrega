@@ -40,9 +40,21 @@ productRouter.put(`/:pid` , async (req,res)=>{
     if (producttoUpdate){
         producttoUpdate = { ...producttoUpdate, ...update}
         await productManager.updateProduct(id , producttoUpdate)
-        res.status(200).send("Producto actualizado con exito")
+        res.status(200).send("Success : Product update")
     }
-    if (!producttoUpdate) res.status(404).send ("El producto no existe")
+    if (!producttoUpdate) res.status(404).send ("This product not exist")
+})
+
+
+productRouter.delete (`/:pid`, async (req,res)=>{
+    let id = req.params.pid
+    let productTodelete = await productManager.getPruductsByid(id)
+    if (!productTodelete) res.status(404).send("Product not Found")
+    if (productTodelete){
+        await productManager.deleteProduct(id)
+        res.status(200).send ("Sucess: Product Deleted")
+    }
+    
 })
 
 
