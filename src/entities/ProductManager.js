@@ -43,7 +43,7 @@ import fs from 'fs'
                 product.code = code 
                 product.stock = stock
                 product.category = category
-                console.log(newProduct.price)
+                
             }
         })
        await this.#saveData()

@@ -26,10 +26,10 @@ productRouter.get ('/' ,async (req , res)=>{
 
 productRouter.post (`/`, async (req,res)=>{
     const {name,description,price, thubnail,code,stock , category} = req.body
-    if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("Todos los campos son obligatorios")
+    if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("All fields are required")
     else {
        await productManager.addProduct(name,description,price,thubnail,code,stock,category)
-       res.status(200).send (`Producto ${{name,description,price,thubnail,code,stock,category}} fue agregado con exito`)
+       res.status(200).send (`Sucess added product : ${{name,description,price,thubnail,code,stock,category}}`)
     }
 })
 
