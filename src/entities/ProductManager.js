@@ -11,9 +11,9 @@ import fs from 'fs'
         this.#arrayProducts=[]
     }
 
-    addProduct =async (name,description,price, thubnail,code,stock , category)=>{
-        this.#arrayProducts = await this.#retrieveData()
-        this.#arrayProducts.push({id:this.#generateId(),name,description,price,thubnail,code,stock,status:true , category}) 
+    
+    addProduct =async (name,description,price,code,stock , category, linkThubnail)=>{
+        this.#arrayProducts.push({id:this.#generateId(),name,description,price,code,stock,status:true , category , thubnail : linkThubnail}) 
        await this.#saveData()
     }
 
@@ -53,6 +53,15 @@ import fs from 'fs'
         let array = await this.#retrieveData()
         this.#arrayProducts=array.filter(element => {return element.id != id});
         await this.#saveData()
+    }
+
+    validatenewProduct = async(productCode)=>{
+        let validate = true 
+        this.#arrayProducts = await this.#retrieveData()
+        this.#arrayProducts.forEach(element => {
+            if (element.code === productCode){  validate = false}
+        });
+        return validate 
     }
   
     #saveData = async ()=> {

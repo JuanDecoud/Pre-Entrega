@@ -1,6 +1,9 @@
 import { Router } from 'express';
 
 import ProductManager from '../entities/ProductManager.js'
+import uploader from '../utils/multer.product.js'
+
+const rutaArchivos = './src/public/'
 
 
 const productRouter = Router();
@@ -18,18 +21,28 @@ productRouter.get ('/' ,async (req , res)=>{
     }
     if (pid!=undefined){
         let searchProduct = await  productManager.getPruductsByid(pid)
-        if (!searchProduct ) res.status(404).send (`no se encuentra el producto`)
+        if (!searchProduct ) res.status(404).send (`Product not found`)
         else res.status(200).json(searchProduct)
     }
     if (limit === undefined && !pid && products.length != 0 ) res.status(200).send(products)
 })
 
-productRouter.post (`/`, async (req,res)=>{
-    const {name,description,price, thubnail,code,stock , category} = req.body
+
+productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
+    if (!req.file)res.status (400).json ({message : 'Please, upload product image'})
+    console.log(req.body)
+    const {name,description,price,code,stock , category} = req.body
     if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("All fields are required")
     else {
-       await productManager.addProduct(name,description,price,thubnail,code,stock,category)
-       res.status(200).send (`Sucess added product : ${{name,description,price,thubnail,code,stock,category}}`)
+        let validate = await productManager.validatenewProduct(code)
+        console.log(validate)
+        if (validate === true){
+            await productManager.addProduct(name,description,price,code,stock,category ,rutaArchivos+req.file.filename)
+            res.status(200).json ({mesage : `Sucess : product added successfully`} )
+        }
+        else {
+            res.status(406).json({message : `Product already exists`})
+        }
     }
 })
 
@@ -56,8 +69,6 @@ productRouter.delete (`/:pid`, async (req,res)=>{
     }
     
 })
-
-
 
 
 export default productRouter ;

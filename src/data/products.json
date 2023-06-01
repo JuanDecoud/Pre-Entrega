@@ -1,13 +1,35 @@
 [
 	{
 		"id": 1,
-		"name": "Disola M 4015",
-		"description": "Tambor 205 lts",
-		"price": 150000,
-		"thubnail": "www",
-		"code": "1301",
-		"stock": 20,
+		"name": "Hidraulico BP 68",
+		"description": "Tambor x 205 lts",
+		"price": "200.000",
+		"code": "1100",
+		"stock": "36",
 		"status": true,
-		"category": "Motor Principal"
+		"category": "Aceites Hidraulicos",
+		"thubnail": "./src/public/h68.jpg"
+	},
+	{
+		"id": 2,
+		"name": "Disola M 4015",
+		"description": "Tambor x 205 lts",
+		"price": "180.000",
+		"code": "1101",
+		"stock": "36",
+		"status": true,
+		"category": "Aceites Para Motor",
+		"thubnail": "./src/public/d40.jpg"
+	},
+	{
+		"id": 3,
+		"name": "Extravida XV 100",
+		"description": "Tambor x 205 lts",
+		"price": "200000",
+		"code": "1102",
+		"stock": "50",
+		"status": true,
+		"category": "Aceites Para Motor",
+		"thubnail": "./src/public/xv100jpg.jpg"
 	}
 ]

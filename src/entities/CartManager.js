@@ -1,21 +1,55 @@
+import fs from 'fs'
+
 export default class CartManager {
     
     #patchFile
     #arrayCarts
     #fileType
 
-    constructor (patchFile , typeFile){
+    constructor  (patchFile , typeFile){
         this.#patchFile = patchFile
         this.#fileType = typeFile
         this.#arrayCarts=[]
     }
 
-    createCart =async (id , product)=>{
-        this.#arrayProducts = await this.#retrieveData()
+    createCart =async ()=>{
+        this.#arrayCarts= await this.#retrieveData()
         let arrayProducts = []
-        arrayProducts.push(product)
-        this.#arrayCarts.push({id:this.#generateId(),arrayProducts}) 
+        this.#arrayCarts.push({id:this.#generateId() , arrayProducts}) 
+        await this.#saveData()
+    }
+
+    isproductAtcard =  (productid , arrayProducts)=>{
+        let product = null ;
+        product= arrayProducts.find(element=>{
+          return element.id == productid
+       })
+       return product
+    }
+
+
+    updateCart = async (cartId , newCart )=>{
+        this.#arrayCarts = await this.#retrieveData()
+        this.#arrayCarts.forEach(cart=>{
+            if (cart.id == cartId) {
+                let {arrayProducts } = newCart
+                cart.arrayProducts = arrayProducts
+            }
+        })
        await this.#saveData()
+    }
+
+    getCarts = async  ()=>{
+        this.#arrayCarts = await this.#retrieveData()
+        return  this.#arrayCarts
+    }
+
+    getCartsByid = async (id)=>{
+        let cartSearch = null
+        this.#arrayCarts = await this.#retrieveData()
+        this.#arrayCarts.forEach(cart=>{
+        if (cart.id == id) cartSearch = cart })
+        return  cartSearch
     }
 
 
@@ -37,7 +71,7 @@ export default class CartManager {
     #retrieveData= async ()=>{
         let data = []
        if(fs.existsSync(this.#patchFile)) data= JSON.parse( await fs.promises.readFile(this.#patchFile, this.#fileType))
-       return await data
+       return  data
     }
 
     
