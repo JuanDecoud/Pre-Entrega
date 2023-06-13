@@ -8,7 +8,7 @@
 		"stock": "36",
 		"status": true,
 		"category": "Aceites Hidraulicos",
-		"thubnail": "./src/public/h68.jpg"
+		"thubnail": "/h68.jpg"
 	},
 	{
 		"id": 2,
@@ -19,7 +19,7 @@
 		"stock": "36",
 		"status": true,
 		"category": "Aceites Para Motor",
-		"thubnail": "./src/public/d40.jpg"
+		"thubnail": "/d40.jpg"
 	},
 	{
 		"id": 3,
@@ -30,6 +30,6 @@
 		"stock": "50",
 		"status": true,
 		"category": "Aceites Para Motor",
-		"thubnail": "./src/public/xv100jpg.jpg"
+		"thubnail": "/xv100jpg.jpg"
 	}
 ]

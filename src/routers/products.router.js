@@ -3,8 +3,6 @@ import { Router } from 'express';
 import ProductManager from '../entities/ProductManager.js'
 import uploader from '../utils/multer.product.js'
 
-const rutaArchivos = './src/public/'
-
 
 const productRouter = Router();
 const productManager = new ProductManager (`./src/data/products.json`, `utf-8`)
@@ -37,7 +35,7 @@ productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
         let validate = await productManager.validatenewProduct(code)
         console.log(validate)
         if (validate === true){
-            await productManager.addProduct(name,description,price,code,stock,category ,rutaArchivos+req.file.filename)
+            await productManager.addProduct(name,description,price,code,stock,category ,'/'+req.file.filename)
             res.status(200).json ({mesage : `Sucess : product added successfully`} )
         }
         else {
