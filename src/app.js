@@ -24,9 +24,8 @@ app.set('view engine' ,'handlebars')
 const serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
 //const io = new Server(serverHttp)
 
-/*
+
 io.on('connection' , ()=>{
     console.log("Cliente Conectado")
 })
 
-*/
