@@ -9,11 +9,11 @@ viewRouter.get('/', async (req,res)=>{
     res.render('home' ,  {products})
 })
 
-
 viewRouter.get('/realtimeproducts' , async(req,res) =>{
-    res.render('realTimeProductos')
-})
+   let products = await productManager.getProducts() 
+   res.render('realTimeProductos',{products})  
 
+})
 
 
 export default viewRouter

@@ -22,7 +22,12 @@ productRouter.get ('/' ,async (req , res)=>{
         if (!searchProduct ) res.status(404).send (`Product not found`)
         else res.status(200).json(searchProduct)
     }
-    if (limit === undefined && !pid && products.length != 0 ) res.status(200).send(products)
+    if (limit === undefined && !pid && products.length != 0 ){
+        let io = req.app.get('socketio')
+        io.emit('updateProducts' , products)
+        res.status(200).send(products)
+    }
+    
 })
 
 
@@ -36,6 +41,9 @@ productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
         console.log(validate)
         if (validate === true){
             await productManager.addProduct(name,description,price,code,stock,category ,'/'+req.file.filename)
+            let products = await productManager.getProducts()
+            let io = req.app.get('socketio')
+            io.emit('updateProducts' , products)
             res.status(200).json ({mesage : `Sucess : product added successfully`} )
         }
         else {
@@ -51,6 +59,9 @@ productRouter.put(`/:pid` , async (req,res)=>{
     if (producttoUpdate){
         producttoUpdate = { ...producttoUpdate, ...update}
         await productManager.updateProduct(id , producttoUpdate)
+        let products = await productManager.getProducts()
+        let io = req.app.get('socketio')
+        io.emit('updateProducts' , products)
         res.status(200).send("Success : Product update")
     }
     if (!producttoUpdate) res.status(404).send ("This product not exist")
@@ -63,6 +74,9 @@ productRouter.delete (`/:pid`, async (req,res)=>{
     if (!productTodelete) res.status(404).send("Product not Found")
     if (productTodelete){
         await productManager.deleteProduct(id)
+        let products = await productManager.getProducts()
+        let io = req.app.get('socketio')
+        io.emit('updateProducts' , products)
         res.status(200).send ("Sucess: Product Deleted")
     }
     

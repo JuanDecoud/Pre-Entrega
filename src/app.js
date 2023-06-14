@@ -3,7 +3,9 @@ import productRouter from './routers/products.router.js'
 import cartsRouter from './routers/carts.router.js'
 import viewRouter from './routers/views.router.js'
 import handlebars from 'express-handlebars'
-//import {Server} from 'socket.io'
+import { Server } from 'socket.io';
+
+
 
 const app = express ();
 app.use(express.json())
@@ -19,13 +21,18 @@ app.use ('/views' , viewRouter)
 app.engine('handlebars' , handlebars.engine())
 app.set('views','./src/views')
 app.set('view engine' ,'handlebars')
+
 //--------
 
+
 const serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
-//const io = new Server(serverHttp)
+const io = new Server(serverHttp)
+app.set('socketio', io);
 
-
-io.on('connection' , ()=>{
-    console.log("Cliente Conectado")
+io.on('connection' , (socket)=>{
+    console.log("New Client Connected")
+    socket.on ('productList' , data =>{
+        io.emit('updateProducts' , data)
+    })
 })
 
