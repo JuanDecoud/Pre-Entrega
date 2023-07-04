@@ -25,22 +25,20 @@ app.set('view engine' ,'handlebars')
 
 //--------
 
-const serverHttp = null
-
 try{
     await mongoose.connect(`mongodb+srv://juanjodecoud:JJjuanjitus22@cluster0.bpez36c.mongodb.net/proyectocoder`)
-    serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
+    const serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
+    const io = new Server(serverHttp)
+    app.set('socketio', io);
+    io.on('connection' , (socket)=>{
+        console.log("New Client Connected")
+        socket.on ('productList' , data =>{
+            io.emit('updateProducts' , data)
+            
+        })
+        
+    })
 }catch (err) {
   console.log (err.message)
 }
-
-const io = new Server(serverHttp)
-app.set('socketio', io);
-
-io.on('connection' , (socket)=>{
-    console.log("New Client Connected")
-    socket.on ('productList' , data =>{
-        io.emit('updateProducts' , data)
-    })
-})
 
