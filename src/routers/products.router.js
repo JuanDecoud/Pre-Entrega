@@ -40,6 +40,7 @@ productRouter.get ('/' ,async (req , res)=>{
 productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
     if (!req.file)res.status (400).json ({message : 'Please, upload product image'})
     const {name,description,price,code,stock , category} = req.body
+    console.log(req.body)
     if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("All fields are required")
     else {
         try {

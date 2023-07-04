@@ -8,18 +8,30 @@ const cartSchema = new mongoose.Schema({
             {
                 product: {
                     type : mongoose.Schema.Types.ObjectId,
-                    ref : 'products'
-                }
+                    ref : 'products',
+                },
+                quantity : {
+                    type:Number,
+                    default : 1
+                } 
             }
        ],
        default : []
     }
+} )
+
+cartSchema.method('isProductatCard' , function(pid){
+    let boolean = false
+    this.products.forEach(element => {
+        let newid =element._id.toString()
+        if (newid === pid){
+            element.quantity+=1
+            boolean= true
+        } 
+    });
+    return boolean 
 })
 
-
-cartSchema.pre('isProductatCart' , function (){
-    this.populate()
-})
 
 const cartModel = mongoose.model (cartCollection ,cartSchema)
 
