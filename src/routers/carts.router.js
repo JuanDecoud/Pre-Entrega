@@ -26,8 +26,10 @@ cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
             if (cartdb && productdb){
             //let productFind =cartManager.isproductAtcard(productId,carttoUpdate.arrayProducts)
                 let result =  cartdb.isProductatCard(productId)
-                await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
-                res.status(200).json({status : "success" , message : "Product added at cart"})
+                if (result ===true){
+                    await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
+                    res.status(200).json({status : "success" , message : "Product added at cart"})
+                }
                 /*if (productFind){
                     let index =carttoUpdate.arrayProducts.findIndex(item => {
                         return item.id == productFind.id

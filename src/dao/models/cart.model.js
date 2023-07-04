@@ -25,7 +25,6 @@ cartSchema.method('isProductatCard' , function(pid){
     this.products.forEach(element => {
         let newid =element._id.toString()
         if (newid === pid){
-            element.quantity+=1
             boolean= true
         } 
     });
