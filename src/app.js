@@ -4,6 +4,7 @@ import cartsRouter from './routers/carts.router.js'
 import viewRouter from './routers/views.router.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io';
+import mongoose from 'mongoose'
 
 
 
@@ -24,8 +25,15 @@ app.set('view engine' ,'handlebars')
 
 //--------
 
+const serverHttp = null
 
-const serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
+try{
+    await mongoose.connect(`mongodb+srv://juanjodecoud:JJjuanjitus22@cluster0.bpez36c.mongodb.net/proyectocoder`)
+    serverHttp=app.listen(8080 , ()=>console.log("Server Up"))
+}catch (err) {
+  console.log (err.message)
+}
+
 const io = new Server(serverHttp)
 app.set('socketio', io);
 

@@ -57,10 +57,15 @@ import fs from 'fs'
 
     validatenewProduct = async(productCode)=>{
         let validate = true 
-        this.#arrayProducts = await this.#retrieveData()
-        this.#arrayProducts.forEach(element => {
-            if (element.code === productCode){  validate = false}
-        });
+        if(!fs.existsSync(this.#patchFile)){
+            return validate
+        }
+        else {
+            this.#arrayProducts = await this.#retrieveData()
+            this.#arrayProducts.forEach(element => {
+                if (element.code === productCode){  validate = false}
+            });
+        }
         return validate 
     }
   
