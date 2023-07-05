@@ -6,6 +6,7 @@ import handlebars from 'express-handlebars'
 import { Server } from 'socket.io';
 import mongoose from 'mongoose'
 import messengerRouter from './routers/messengerRouter.js'
+import messengerModel from './dao/models/messenger.model.js'
 
 
 
@@ -38,8 +39,9 @@ try{
         socket.on ('productList' , data =>{
             io.emit('updateProducts' , data)
         })
-        socket.on ('messengers', data=>{
-            io.emit('messengers' , data)
+        socket.on ('messages',async data=>{
+           await messengerModel.create({userMail :data.userMail , messege : data.messege})
+           io.emit('updateMessages' , await messengerModel.find().lean())
         })
         
     })

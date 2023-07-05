@@ -1,9 +1,23 @@
 
 let socket = io()
 
+let userMail = localStorage.getItem('usuario')
 
-socket.on ('messengers' ,messages =>{
+if (!localStorage.getItem('usuario')) {
+    Swal.fire({
+        title: 'Input email address',
+        input: 'email',
+        inputLabel: 'Your email address',
+        inputPlaceholder: 'Enter your email address',
+        allowOutsideClick: false
+      }).then(result =>{
+        localStorage.setItem('usuario' , JSON.stringify(result.value))
+      })
+      
+}
 
+socket.on ('updateMessages' ,messages =>{
+    console.log("esta info viene del servidor")
     let divProducts = document.getElementById('messengerBox')
         divProducts.innerHTML=''
         for ( data of messages) {
@@ -14,9 +28,26 @@ socket.on ('messengers' ,messages =>{
                 </div>`
             divProducts.innerHTML+=div
         }
-    } )
+ } )
 
 
+
+ let btnSend = document.getElementById('btnSend')
+
+ btnSend.addEventListener('click', ()=>{
+    let message = document.getElementById('iMessage').value
+    let data = {
+        userMail : userMail,
+        messege : message
+    }
+    console.log(data)
+    socket.emit('messages', data)
+ })
+
+
+
+ 
+ //socket.emit("messages", "esta info viene del cliente")
 
 
     
