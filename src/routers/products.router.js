@@ -26,7 +26,7 @@ productRouter.get ('/' ,async (req , res)=>{
             else res.status(200).json(searchProduct)
         }
         if (limit === undefined && !pid && products.length != 0 ){
-            let io = req.app.get('socketio')
+           let io = req.app.get('socketio')
             io.emit('updateProducts' , products)
             res.status(200).send(products)
         }
@@ -40,6 +40,7 @@ productRouter.get ('/' ,async (req , res)=>{
 productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
     if (!req.file)res.status (400).json ({message : 'Please, upload product image'})
     const {name,description,price,code,stock , category} = req.body
+    console.log(req.body)
     if (!name || !description || !price || !code || !stock || !category)res.status(400).send ("All fields are required")
     else {
         try {
@@ -47,7 +48,7 @@ productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
             if (validate.length ===0){
                 const imgRute = '/'+req.file.filename
                 await productModel.create ({name,description,price,code,stock,status :true,category ,linkThubnail:'/'+req.file.filename})
-                let products = await productModel.find()
+                let products = await productModel.find().lean()
                 let io = req.app.get('socketio')
                 io.emit('updateProducts' , products)
                 res.status(200).json ({mesage : `Sucess : product added successfully`} )
@@ -73,7 +74,7 @@ productRouter.put(`/:pid` , async (req,res)=>{
         console.log (result)
         if (result.matchedCount === 0) res.status(404).send ("This product not exist")
         else {
-            let products = await productModel.find()
+            let products = await productModel.find().lean()
             let io = req.app.get('socketio')
             io.emit('updateProducts' , products)
             res.status(200).send("Success : Product update")
@@ -102,7 +103,7 @@ productRouter.delete (`/:pid`, async (req,res)=>{
    try {
         let result = await productModel.deleteOne({"_id":id})
         await productManager.deleteProduct(id)
-        let products = await productModel.find()
+        let products = await productModel.find().lean()
         let io = req.app.get('socketio')
         io.emit('updateProducts' , products)
         res.status(200).send ("Sucess: Product Deleted")
