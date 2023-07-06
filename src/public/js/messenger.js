@@ -2,7 +2,6 @@
 let socket = io()
 
 
-
 if (!localStorage.getItem('usuario')) {
     Swal.fire({
         title: 'Input email address',
