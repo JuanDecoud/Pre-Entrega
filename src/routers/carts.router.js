@@ -70,7 +70,8 @@ cartsRouter.put('/:cid' , async(req,res)=>{
     let result = comprobateMongoId(cartId)
     if (result === true){
         try{
-            let cart = cartModel.findById(cartId)
+            let cart = await cartModel.findById(cartId)
+            console.log(cart)
             if (cart){
                 if(arrayProducts){
                     cart.products = arrayProducts
