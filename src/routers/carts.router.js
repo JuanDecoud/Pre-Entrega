@@ -27,7 +27,7 @@ cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
                 if (cartdb && productdb){
                     let result =  cartdb.isProductatCard(productId)
                     if (result ===true ){
-                        await cartdb.updateQuantity(cartdb.products , productId)
+                        await cartdb.updateQuantity( productId ,1)
                         await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
                         res.status(200).json({status : "success" , message : "Product added at cart"})
                     }
@@ -87,8 +87,37 @@ cartsRouter.put('/:cid' , async(req,res)=>{
   
 })
 
+cartsRouter.put('/:cid/product/:pid' , async(req,res)=>{
+    const productId = req.params.pid
+    const cartId = req.params.cid
+    const productQuantity = req.body
+
+    if (productId!=undefined && cartId != undefined){
+        let validateId = comprobateMongoId(productId)
+        if (validateId=== true){
+            try{
+                let cartdb = await cartModel.findById(cartId)
+                let productdb = await productModel.findById(productId)
+                if (!productdb)res.status(400).json ({status : ' Fail' , Message : 'Product does not exist'})
+                if (!cartdb)res.status(400).json ({status : ' Fail' , Message : ' Cart does not exist'})
+                if (cartdb && productdb){
+                    let result =  cartdb.isProductatCard(productId)
+                    if (result ===true ){
+                        await cartdb.updateQuantity( productId , productQuantity)
+                        await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
+                        res.status(200).json({status : "success" , message : "Product added at cart"})
+                    }else res.status(400).json ({status : ' Fail' , Message : 'Product does not at cart'})
+            }
+            }catch (err){
+                res.json ({status : "error" , message : err.message })
+            }
+        }else  res.status(400).json({status: "Error" , message : "Invalidad Id"}) 
+
+    }
+
+})
+
 cartsRouter.post ('/', async(req,res)=>{
-    //await cartManager.createCart()
     try {
         cartModel.create({})
         res.status(200).json ({Status : 'Sucess', Mesagge : 'Cart added'})
@@ -96,7 +125,6 @@ cartsRouter.post ('/', async(req,res)=>{
     }catch (err){
         res.json ({status : "error" , message : err.message })
     }
-    
 })
 
 cartsRouter.get('/:cid',async (req,res)=>{

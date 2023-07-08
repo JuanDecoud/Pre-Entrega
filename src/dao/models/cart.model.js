@@ -29,10 +29,10 @@ cartSchema.method('isProductatCard' , function(pid){
     return boolean 
 })
 
-cartSchema.method('updateQuantity' , function (arrayProducts , pid){
+cartSchema.method('updateQuantity' , function ( pid , quantity){
     this.products.forEach(element => {
         let newid =element._id.toString()
-        if (newid === pid)element.quantity+=1  
+        if (newid === pid)element.quantity+=quantity  
      })
 })
 
