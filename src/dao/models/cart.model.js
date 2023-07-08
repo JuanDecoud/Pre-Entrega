@@ -24,12 +24,16 @@ cartSchema.method('isProductatCard' , function(pid){
     let boolean = false
     this.products.forEach(element => {
         let newid =element._id.toString()
-        if (newid === pid){
-            element.quantity+=1
-            boolean= true
-        } 
+        if (newid === pid){boolean= true} 
     });
     return boolean 
+})
+
+cartSchema.method('updateQuantity' , function (arrayProducts , pid){
+    this.products.forEach(element => {
+        let newid =element._id.toString()
+        if (newid === pid)element.quantity+=1  
+     })
 })
 
 
