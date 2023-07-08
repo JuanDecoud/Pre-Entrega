@@ -13,11 +13,13 @@ const productManager = new ProductManager (`./src/data/products.json`, `utf-8`)
 cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
     const productId = req.params.pid
     const cartId = req.params.cid
+  
 
     if (productId!=undefined && cartId != undefined){
 
         try{
             let cartdb = await cartModel.findById(cartId)
+      
             let productdb = await productModel.findById(productId)
             if (!productdb)res.status(400).json ({status : ' Fail' , Message : 'Product does not exist'})
             if (!cartdb)res.status(400).json ({status : ' Fail' , Message : ' Cart does not exist'})
@@ -43,17 +45,11 @@ cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
 })
 
 cartsRouter.delete('/:cid/product/:pid', async(req,res)=>{
-    let cid = req.params.cid
-    let pid = req.params.pid
-    console.log(cid)
-    console.log(pid)
-
-    let cart = await cartModel.findById(cid)
-    let newProducts = cart.deleteProduct(pid) 
-    cart.products = newProducts
-   
-
-    cartModel.updateOne({'id':cid}, {$set : {cart}} )
+    const cid = req.params.cid
+    const pid = req.params.pid
+    const cart = await cartModel.findById(cid)
+    await cart.deleteProduct(pid)
+    await cartModel.updateOne({'_id':cid}, {$set : {...cart}} )
     res.status(200).json({status: "Sucess" , message : "Product deleted"})
 
 })

@@ -34,8 +34,8 @@ cartSchema.method('isProductatCard' , function(pid){
 
 
 cartSchema.method ('deleteProduct' , function(pid){
-    let filter = this.products.filter((product)=>(product._id.toString())!=pid)
-    return filter
+    let index = this.products.findIndex((product)=>(product._id.toString())===pid)
+    this.products.splice(index,1)
 })
 
 
