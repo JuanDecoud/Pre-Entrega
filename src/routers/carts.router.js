@@ -76,6 +76,7 @@ cartsRouter.put('/:cid' , async(req,res)=>{
                 if(arrayProducts){
                     cart.products = arrayProducts
                     await cartModel.updateOne({'_id':cartId}, {$set : {...cart}} )
+                    res.status(200).json({status: "Sucess" , message : "Products Added to cart"})
                 }else res.status(400).json({status: "Error" , message : "No products Selected"})
             }else res.status(200).json({status: "Error" , message : "Cart doesnt exist"})
         }catch (err){
