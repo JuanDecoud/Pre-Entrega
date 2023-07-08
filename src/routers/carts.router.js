@@ -15,35 +15,20 @@ cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
     const cartId = req.params.cid
 
     if (productId!=undefined && cartId != undefined){
-        /*let carttoUpdate = await cartManager.getCartsByid(cartId)
-          let producttoAdded = await  productManager.getPruductsByid(productId)*/
-        try{
 
+        try{
             let cartdb = await cartModel.findById(cartId)
             let productdb = await productModel.findById(productId)
             if (!productdb)res.status(400).json ({status : ' Fail' , Message : 'Product does not exist'})
             if (!cartdb)res.status(400).json ({status : ' Fail' , Message : ' Cart does not exist'})
             if (cartdb && productdb){
-            //let productFind =cartManager.isproductAtcard(productId,carttoUpdate.arrayProducts)
+
                 let result =  cartdb.isProductatCard(productId)
                 if (result ===true){
+                    console.log(cartdb)
                     await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
                     res.status(200).json({status : "success" , message : "Product added at cart"})
                 }
-                /*if (productFind){
-                    let index =carttoUpdate.arrayProducts.findIndex(item => {
-                        return item.id == productFind.id
-                    })
-                    carttoUpdate.arrayProducts[index].quantity +=1
-                    await cartManager.updateCart(cartId,carttoUpdate)
-                    res.status(200).json ({status : ' Sucess' , Message : 'Cart Update Successfully'})
-                }
-                if (!productFind){
-                    carttoUpdate.arrayProducts.push ({id :producttoAdded.id , quantity:1})
-                    await cartManager.updateCart(cartId,carttoUpdate)
-                    res.status(200).json ({status : ' Sucess' , Message : 'Cart Update Successfully'})
-                }
-                */
             if (result === false){
                     cartdb.products.push(productdb)
                     await cartModel.updateOne({'_id': cartId},{$set: { ...cartdb}})
@@ -55,6 +40,22 @@ cartsRouter.post ('/:cid/product/:pid' , async(req,res)=>{
         }
         
     }
+})
+
+cartsRouter.delete('/:cid/product/:pid', async(req,res)=>{
+    let cid = req.params.cid
+    let pid = req.params.pid
+    console.log(cid)
+    console.log(pid)
+
+    let cart = await cartModel.findById(cid)
+    let newProducts = cart.deleteProduct(pid) 
+    cart.products = newProducts
+   
+
+    cartModel.updateOne({'id':cid}, {$set : {cart}} )
+    res.status(200).json({status: "Sucess" , message : "Product deleted"})
+
 })
 
 cartsRouter.post ('/', async(req,res)=>{

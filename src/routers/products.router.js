@@ -9,32 +9,28 @@ const productRouter = Router();
 const productManager = new ProductManager (`./src/data/products.json`, `utf-8`)
 
 productRouter.get ('/' ,async (req , res)=>{
-    const limit = req.query.limit
-    const pid = req.query.pid
-    try{
-        let products = await productModel.find()
-        if (limit <=0) res.status(400).send("El limite no puede ser igual o inferior a 0")
-        if(limit>0){
-            let productsWlimit = []
-            /*for (let index = 0; index <= limit-1; index++) productsWlimit.push (products[index]);   */
-            productsWlimit = await productModel.find().limit(limit)
-            res.status(200).send(productsWlimit)
-        }
-        if (pid!=undefined){
-            let searchProduct = await  productModel.findById(pid)
-            if (!searchProduct ) res.status(404).send (`Product not found`)
-            else res.status(200).json(searchProduct)
-        }
-        if (limit === undefined && !pid && products.length != 0 ){
-           let io = req.app.get('socketio')
-            io.emit('updateProducts' , products)
-            res.status(200).send(products)
-        }
 
-    }catch (err){
+   let limit = parseInt(req.query.limit)|| 10
+   let page = parseInt(req.query.page) || 1
+   let filter = req.query.filter 
+   let sort = req.query.sort 
+
+   let filterOptions= {limit : limit , page : page }
+   if (sort !=undefined){
+    let optSort = {sort : {price : sort}}
+    filterOptions={...filterOptions , ...optSort}
+   } 
+   if(filter === undefined) filter = {}
+   else filter = {category : filter}
+
+   try{
+        let result = await productModel.paginate(filter, filterOptions)
+        res.status(200).send({ message: "Success" ,result :result})
+
+   }catch(err){
         res.json ({status : "error" , message : err.message })
-    }
-    
+   }
+
 })
 
 productRouter.post (`/`,uploader.single('file') , async (req,res)=>{
@@ -71,7 +67,6 @@ productRouter.put(`/:pid` , async (req,res)=>{
     /* await productManager.updateProduct(id , producttoUpdate)*/
     try {
         let result = await productModel.updateOne({'_id': id},{$set: { ...update}})
-        console.log (result)
         if (result.matchedCount === 0) res.status(404).send ("This product not exist")
         else {
             let products = await productModel.find().lean()

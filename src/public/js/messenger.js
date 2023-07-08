@@ -1,7 +1,6 @@
 
 let socket = io()
 
-
 if (!localStorage.getItem('usuario')) {
     Swal.fire({
         title: 'Input email address',
@@ -15,10 +14,7 @@ if (!localStorage.getItem('usuario')) {
       
 }
 
-
-
 socket.on ('updateMessages' ,messages =>{
-   
     let divProducts = document.getElementById('messengerBox')
         divProducts.innerHTML=''
         for ( data of messages) {
@@ -31,10 +27,7 @@ socket.on ('updateMessages' ,messages =>{
         }
  } )
 
-
-
  let btnSend = document.getElementById('btnSend')
-
  btnSend.addEventListener('click', ()=>{
     let userMail = localStorage.getItem('usuario')
     let message = document.getElementById('iMessage').value
@@ -42,14 +35,5 @@ socket.on ('updateMessages' ,messages =>{
         userMail : userMail,
         messege : message
     }
-    console.log(data)
     socket.emit('messages', data)
  })
-
-
-
- 
- //socket.emit("messages", "esta info viene del cliente")
-
-
-    

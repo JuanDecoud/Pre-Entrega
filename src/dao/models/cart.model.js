@@ -25,10 +25,17 @@ cartSchema.method('isProductatCard' , function(pid){
     this.products.forEach(element => {
         let newid =element._id.toString()
         if (newid === pid){
+            element.quantity+=1
             boolean= true
         } 
     });
     return boolean 
+})
+
+
+cartSchema.method ('deleteProduct' , function(pid){
+    let filter = this.products.filter((product)=>(product._id.toString())!=pid)
+    return filter
 })
 
 
